@@ -1,0 +1,59 @@
+.main-container {
+    display: grid;
+    grid-template-columns: 3fr 2.3fr 3fr;
+    grid-template-rows: 5vh 70vh 25vh;
+    justify-items: stretch;
+}
+
+.sides {
+    background-color: purple;
+}
+
+.center {
+    text-align: center;
+}
+
+.middle-container {
+    border: 5px solid purple;
+    border-radius: 20px;
+    background-color: white;
+    height: 95%;
+}
+
+.middle-container > h1 {
+    text-align: center;
+    font-size: 3em;
+}
+
+.middle-container > h2 {
+    text-align: center;
+}
+
+.button-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.button-container > button {
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px 10px 20px;
+    font-family: Helvetica;
+    font-size: 1em;
+}
+
+.input-box {
+    width: 78%;
+    height: 25px;
+    font-family: 'Helvetica';
+    font-size: 25px;
+    text-align: center;
+    border: black solid 2px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* .main-container > div {
+    border: solid black 1px;
+} */
