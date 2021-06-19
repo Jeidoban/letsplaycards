@@ -20,7 +20,7 @@ function StartPage() {
             <div className="sides">
                 <div className="middle-container">
                     <h1>Let's Play Cards</h1>
-                    <Link to="/play?game=hello">
+                    <Link to={generateUrl()}>
                         <div className="button-container">
                             <button onClick={createGameClicked}>Create Game</button>
                         </div>
@@ -51,6 +51,10 @@ function StartPage() {
 
     function inputClicked(e: any) {
         console.log(e)
+    }
+
+    function generateUrl() {
+        return 'hello'
     }
 }
 
