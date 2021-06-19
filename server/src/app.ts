@@ -12,8 +12,9 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket: Socket) => {
     console.log('Connected!')
-    socket.emit('createGame', 'some words!', 'for', 'you')
-    socket.on('createGame', () => {}) //TODO: implement createGame
+    
+    socket.on('createGame', createGame) 
+
     socket.on('disconnect', () => {
         console.log('Disconnected!')
     })
@@ -22,3 +23,7 @@ io.on('connection', (socket: Socket) => {
 server.listen(3001, () => {
     console.log('listening on port 3001');
 });
+
+function createGame(gameID: string, ownerName: string, expansions: string[]) {
+
+}
