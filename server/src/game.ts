@@ -1,13 +1,17 @@
+import Player from './player'
+
 class Game {
     highestScore = 0
     gameID: string
     players: Player[]
+    expansions: string[]
     password?: string
 
-    constructor(gameID: string, players: Player[], password?: string) {
+    constructor(gameID: string, players: Player[], expansions: string[], password?: string) {
         this.gameID = gameID
         this.players = players
         this.password = password
+        this.expansions = expansions
     }
 
     updateScore() {
@@ -21,14 +25,5 @@ class Game {
 
 }
 
-class Player {
-    isGameOwner: boolean
-    name: string
-    score = 0
+export default Game
 
-    constructor(name: string, isGameOwner: boolean) {
-        this.name = name
-        this.isGameOwner = isGameOwner
-    }
-
-}
