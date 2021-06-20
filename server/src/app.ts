@@ -1,10 +1,13 @@
 import { Socket } from 'dgram';
 import express from 'express';
+import Game from './game'
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+
+let games: {[key: string]: Game}
 
 app.get('/', (req, res) => {
     res.send('Some stuff!');
@@ -25,5 +28,5 @@ server.listen(3001, () => {
 });
 
 function createGame(gameID: string, ownerName: string, expansions: string[]) {
-
+    games[gameID] = new Game(gameID, ownerName, expansions)
 }
