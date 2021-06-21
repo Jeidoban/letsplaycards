@@ -1,3 +1,5 @@
-class Card {
-    
+interface Cards {
+    blackCards: {
+        
+    }
 }

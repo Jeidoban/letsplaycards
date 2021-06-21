@@ -40,29 +40,83 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var player_1 = __importDefault(require("./player"));
+var mongodb_1 = require("mongodb");
+// Replace the uri string with your MongoDB deployment's connection string.
+var uri = "mongodb+srv://jade424433:fiqva8nHf4ePy4WN@cluster0.bhstq.mongodb.net/letsplaycards?retryWrites=true&w=majority";
+var client = new mongodb_1.MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 var Game = /** @class */ (function () {
     function Game(gameID, gameOwner, expansions, password) {
         this.highestScore = 0;
-        this.players = [];
+        this.blackCardDrawPile = [];
+        this.whiteCardDrawPile = [];
+        this.currentBlackCard = '';
+        this.players = {};
+        this.maxCardsInHand = 10;
         this.gameID = gameID;
         this.password = password;
-        this.getCards(expansions);
+        this.expansions = expansions;
+        //this.getCards()
         this.addPlayer(gameOwner, true);
     }
     Game.prototype.updateScore = function () {
     };
-    Game.prototype.resetTimeout = function () {
-        // reset to 0 everytime a server action is taken
-    };
-    Game.prototype.getCards = function (expansions) {
+    Game.prototype.dealCards = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/];
             });
         });
     };
+    Game.prototype.resetTimeout = function () {
+        // reset to 0 everytime a server action is taken
+    };
+    Game.prototype.getCards = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var database, expansions, query, docs, _i, docs_1, doc;
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _c.trys.push([0, , 3, 5]);
+                        return [4 /*yield*/, client.connect()];
+                    case 1:
+                        _c.sent();
+                        database = client.db('letsplaycards');
+                        expansions = database.collection('expansions');
+                        query = { name: { $in: this.expansions } };
+                        return [4 /*yield*/, expansions.find(query).toArray()];
+                    case 2:
+                        docs = _c.sent();
+                        for (_i = 0, docs_1 = docs; _i < docs_1.length; _i++) {
+                            doc = docs_1[_i];
+                            (_a = this.blackCardDrawPile).push.apply(_a, doc.black);
+                            (_b = this.whiteCardDrawPile).push.apply(_b, doc.white);
+                        }
+                        this.shuffleArray(this.blackCardDrawPile);
+                        this.shuffleArray(this.whiteCardDrawPile);
+                        console.log('hello');
+                        return [3 /*break*/, 5];
+                    case 3: return [4 /*yield*/, client.close()];
+                    case 4:
+                        _c.sent();
+                        return [7 /*endfinally*/];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Game.prototype.shuffleArray = function (array) {
+        var _a;
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            _a = [array[j], array[i]], array[i] = _a[0], array[j] = _a[1];
+        }
+    };
     Game.prototype.addPlayer = function (name, isGameOwner) {
-        this.players.push(new player_1.default(name, isGameOwner));
+        this.players[name] = new player_1.default(name, isGameOwner);
     };
     return Game;
 }());

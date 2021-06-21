@@ -11,6 +11,8 @@ let games: {[key: string]: Game}
 
 app.get('/', (req, res) => {
     res.send('Some stuff!');
+    let game = new Game('cool', 'Jade', ['CAH Base Set', '90s Nostalgia Pack', 'CAH: Box Expansion'])
+    game.getCards()
 })
 
 io.on('connection', (socket: Socket) => {

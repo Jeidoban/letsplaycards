@@ -1,9 +1,19 @@
 import Player from './player'
+import { MongoClient } from 'mongodb';
+
+// Replace the uri string with your MongoDB deployment's connection string.
+const uri = "mongodb+srv://jade424433:fiqva8nHf4ePy4WN@cluster0.bhstq.mongodb.net/letsplaycards?retryWrites=true&w=majority";
+
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 class Game {
     highestScore = 0
-    blackCardDrawPile: string[] = []
-    whiteCardDrawPile: string[] = []
+    expansions: string[]
+    blackCardDrawPile: Object[] = []
+    whiteCardDrawPile: Object[] = []
     currentBlackCard = ''
     gameID: string
     players: {[key: string]: Player} = {}
@@ -13,7 +23,8 @@ class Game {
     constructor(gameID: string, gameOwner: string, expansions: string[], password?: string) {
         this.gameID = gameID
         this.password = password
-        this.getCards(expansions)
+        this.expansions = expansions
+        //this.getCards()
         this.addPlayer(gameOwner, true)
     }
 
@@ -21,25 +32,81 @@ class Game {
 
     }
 
-    dealCards() {
-        for (const player in this.players) {
-            const cards = this.players[player].currentCards
-            for (let i = 0; i < this.maxCardsInHand - cards.length; i++) {
-                cards.push(this.whiteCardDrawPile.pop()!)
-            }
-        }
+    async dealCards() {
+        // for (const player in this.players) {
+        //     const cards = this.players[player].currentCards
+        //     for (let i = 0; i < this.maxCardsInHand - cards.length; i++) {
+        //         if (this.whiteCardDrawPile.length > 0) {
+        //             let card = this.whiteCardDrawPile.pop()!
+        //             cards.push(card)
+        //         } else {
+        //             await this.getCards()
+        //             let card = this.whiteCardDrawPile.pop()!
+        //             cards.push(card)
+        //         }
+        //     }
+        // }
+
+        // if (this.blackCardDrawPile.length > 0) {
+        //     this.currentBlackCard = this.blackCardDrawPile.pop()!
+        // } else {
+        //     await this.getCards()
+        //     this.currentBlackCard = this.blackCardDrawPile.pop()!
+        // }
     }
 
     resetTimeout() {
         // reset to 0 everytime a server action is taken
     }
 
-    async getCards(expansions: string[]) {
+    async getCards() {
         // reach out to DB and pull all cards in those expansions
+        // shuffle cards too.
+        // do a check on whether black or white cards need to be pulled
+        try {
+            await client.connect();
+        
+            const database = client.db('letsplaycards');
+            const expansions = database.collection('expansions');
+        
+            const query = {name: {$in: this.expansions}}
+
+            const docs = await expansions.find(query).toArray()
+
+            for (const doc of docs) {
+                this.blackCardDrawPile.push(...doc.black)
+                this.whiteCardDrawPile.push(...doc.white)
+            }
+
+            this.shuffleArray(this.blackCardDrawPile)
+            this.shuffleArray(this.whiteCardDrawPile)
+            console.log('hello')
+            
+        } finally {
+            await client.close()
+        }
+    }
+
+    private shuffleArray(array: Object[]) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
     }
 
     addPlayer(name: string, isGameOwner: boolean) {
         this.players[name] = new Player(name, isGameOwner)
+    }
+}
+
+interface Cards {
+    blackCards: {
+        drawPile: string[],
+        discardPile: string[]
+    },
+    whiteCards: {
+        drawPile: string[],
+        discardPile: string[]
     }
 }
 

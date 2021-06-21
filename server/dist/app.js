@@ -13,6 +13,8 @@ var io = new Server(server);
 var games;
 app.get('/', function (req, res) {
     res.send('Some stuff!');
+    var game = new game_1.default('cool', 'Jade', ['CAH Base Set', '90s Nostalgia Pack', 'CAH: Box Expansion']);
+    game.getCards();
 });
 io.on('connection', function (socket) {
     console.log('Connected!');
