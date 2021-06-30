@@ -1,7 +1,6 @@
 import Player from './player'
 import { MongoClient } from 'mongodb';
 
-// Replace the uri string with your MongoDB deployment's connection string.
 const uri = "mongodb+srv://jade424433:fiqva8nHf4ePy4WN@cluster0.bhstq.mongodb.net/letsplaycards?retryWrites=true&w=majority";
 
 const client = new MongoClient(uri, {
@@ -24,7 +23,7 @@ class Game {
         this.gameID = gameID
         this.password = password
         this.expansions = expansions
-        //this.getCards()
+        this.getCards()
         this.addPlayer(gameOwner, true)
     }
 
@@ -60,9 +59,6 @@ class Game {
     }
 
     async getCards() {
-        // reach out to DB and pull all cards in those expansions
-        // shuffle cards too.
-        // do a check on whether black or white cards need to be pulled
         try {
             await client.connect();
         
@@ -80,8 +76,6 @@ class Game {
 
             this.shuffleArray(this.blackCardDrawPile)
             this.shuffleArray(this.whiteCardDrawPile)
-            console.log('hello')
-            
         } finally {
             await client.close()
         }
@@ -96,17 +90,6 @@ class Game {
 
     addPlayer(name: string, isGameOwner: boolean) {
         this.players[name] = new Player(name, isGameOwner)
-    }
-}
-
-interface Cards {
-    blackCards: {
-        drawPile: string[],
-        discardPile: string[]
-    },
-    whiteCards: {
-        drawPile: string[],
-        discardPile: string[]
     }
 }
 

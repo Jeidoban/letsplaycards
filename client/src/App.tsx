@@ -11,10 +11,10 @@ import {
 
 function App() {
   useEffect(() => {
-    const socket = io('http://127.0.0.1:3001')
-    socket.on('hello', (arg1, arg2, arg3) => {
-      alert(arg1 + arg2 + arg3)
-    })
+    // const socket = io('http://127.0.0.1:3001')
+    // socket.on('hello', (arg1, arg2, arg3) => {
+    //   alert(arg1 + arg2 + arg3)
+    // })
   })
 
   return (
