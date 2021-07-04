@@ -6,6 +6,14 @@ const server = http.createServer(app);
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io';
 const io = new Server(server);
+import { MongoClient } from 'mongodb';
+
+const uri = "mongodb+srv://jade424433:fiqva8nHf4ePy4WN@cluster0.bhstq.mongodb.net/letsplaycards?retryWrites=true&w=majority";
+
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 let games: {[key: string]: Game}
 
@@ -19,6 +27,7 @@ io.on('connection', (socket: Socket) => {
     console.log('Connected!')
     
     socket.on('createGame', createGame) 
+    socket.on('getExpansions', getExpansions)
     
     socket.on('disconnect', () => {
         console.log('Disconnected!')
@@ -28,6 +37,22 @@ io.on('connection', (socket: Socket) => {
 server.listen(3001, () => {
     console.log('listening on port 3001');
 });
+
+async function getExpansions(callback: Function) {
+    try {
+        await client.connect();
+    
+        const database = client.db('letsplaycards');
+        const expansions = database.collection('expansions');
+
+        const docs = await expansions.find().toArray()
+        
+        callback(docs)
+
+    } finally {
+        await client.close()
+    }
+}
 
 function createGame(gameID: string, ownerName: string, expansions: string[], callback: Function) {
     games[gameID] = new Game(gameID, ownerName, expansions)
