@@ -20,11 +20,6 @@ function StartPage() {
 
   type Expansion = { name: string, checked: boolean }[]  
 
-  // async function getExpansions(): Expansion {
-  //   socket.emit('getExpansions', (expansions: Expansion) => {
-      
-  //   })
-  // }
 
   // const expansions = [
   //   {
@@ -43,7 +38,9 @@ function StartPage() {
 
   
   useEffect(() => {
-    // socket.emit('getExpansions')
+    socket.emit('getExpansions', (expansions: Expansion) => {
+      
+    })
   }, [])
 
   // return (
