@@ -20,26 +20,10 @@ function StartPage() {
 
   type Expansion = { name: string, checked: boolean }[]  
 
-
-  // const expansions = [
-  //   {
-  //     name: 'hello',
-  //     checked: false
-  //   },
-  //   {
-  //     name: 'wow',
-  //     checked: false
-  //   },
-  //   {
-  //     name: 'cool',
-  //     checked: false
-  //   }
-  // ]
-
   
   useEffect(() => {
-    socket.emit('getExpansions', (expansions: Expansion) => {
-      
+    socket.emit('getExpansions', (expansionss: any) => {
+      setExpansions(expansionss)
     })
   }, [])
 

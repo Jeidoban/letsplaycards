@@ -44,11 +44,14 @@ async function getExpansions(callback: Function) {
     
         const database = client.db('letsplaycards');
         const expansions = database.collection('expansions');
-
         const docs = await expansions.find().toArray()
-        
-        callback(docs)
+        let exp: {name: string, checked: boolean}[] = []
 
+        for (const doc of docs) {
+            exp.push({name: doc.name, checked: false})
+        }
+        
+        callback(exp)
     } finally {
         await client.close()
     }

@@ -13,7 +13,7 @@
         },
         {
             "name": "Run server",
-            "program": "${workspaceFolder}/client/src/index.tsx",
+            "program": "${workspaceFolder}/server/src/app.ts",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"

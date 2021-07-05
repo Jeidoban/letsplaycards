@@ -41,7 +41,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var player_1 = __importDefault(require("./player"));
 var mongodb_1 = require("mongodb");
-// Replace the uri string with your MongoDB deployment's connection string.
 var uri = "mongodb+srv://jade424433:fiqva8nHf4ePy4WN@cluster0.bhstq.mongodb.net/letsplaycards?retryWrites=true&w=majority";
 var client = new mongodb_1.MongoClient(uri, {
     useNewUrlParser: true,
@@ -58,7 +57,7 @@ var Game = /** @class */ (function () {
         this.gameID = gameID;
         this.password = password;
         this.expansions = expansions;
-        //this.getCards()
+        this.getCards();
         this.addPlayer(gameOwner, true);
     }
     Game.prototype.updateScore = function () {
@@ -97,7 +96,6 @@ var Game = /** @class */ (function () {
                         }
                         this.shuffleArray(this.blackCardDrawPile);
                         this.shuffleArray(this.whiteCardDrawPile);
-                        console.log('hello');
                         return [3 /*break*/, 5];
                     case 3: return [4 /*yield*/, client.close()];
                     case 4:
