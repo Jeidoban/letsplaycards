@@ -16,15 +16,15 @@ function StartPage() {
   const [playerName, setPlayerName] = useState('')
   const [gameID, setGameID] = useState('')
   const [expansionClicked, setExpasionClicked] = useState(false)
-  const [expansions, setExpansions] = useState<Expansion>(getExpansions())
+  const [expansions, setExpansions] = useState<Expansion>([])
 
   type Expansion = { name: string, checked: boolean }[]  
 
-  async function getExpansions(): Expansion {
-    socket.emit('getExpansions', (expansions: Expansion) => {
+  // async function getExpansions(): Expansion {
+  //   socket.emit('getExpansions', (expansions: Expansion) => {
       
-    })
-  }
+  //   })
+  // }
 
   // const expansions = [
   //   {
