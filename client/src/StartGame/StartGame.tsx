@@ -16,14 +16,13 @@ function StartPage() {
   const [playerName, setPlayerName] = useState('')
   const [gameID, setGameID] = useState('')
   const [expansionClicked, setExpasionClicked] = useState(false)
-  const [expansions, setExpansions] = useState<Expansion>([])
+  const [expansions, setExpansions] = useState<ExpansionSets>([])
 
-  type Expansion = { name: string, checked: boolean }[]  
+  type ExpansionSets = { name: string, checked: boolean }[]  
 
-  
   useEffect(() => {
-    socket.emit('getExpansions', (expansionss: any) => {
-      setExpansions(expansionss)
+    socket.emit('getExpansions', (expansionSets: ExpansionSets) => {
+      setExpansions(expansionSets)
     })
   }, [])
 
@@ -103,7 +102,6 @@ function StartPage() {
       prev[index].checked = event.target.checked
       return prev
     })
-    //expansions[index].checked = !expansions[index].checked 
     console.log(expansions)
   }
 
@@ -114,7 +112,7 @@ function StartPage() {
           {expansions.map((item, index) => {
             return (
               <li>
-                  <input id="selectall" key={item.name} name={item.name} defaultChecked={item.checked} onChange={(e) => checkExpansions(e, index)} type="checkbox" />
+                  <input id="selectall" key={index} name={item.name} defaultChecked={item.checked} onChange={(e) => checkExpansions(e, index)} type="checkbox" />
                   <label key={item.name} htmlFor={item.name}>{item.name}</label>
               </li>
             )

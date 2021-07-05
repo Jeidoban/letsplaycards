@@ -75,7 +75,7 @@ function getExpansions(callback) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, , 4, 6]);
+                    _a.trys.push([0, , 3, 4]);
                     return [4 /*yield*/, client.connect()];
                 case 1:
                     _a.sent();
@@ -87,18 +87,17 @@ function getExpansions(callback) {
                     exp = [];
                     for (_i = 0, docs_1 = docs; _i < docs_1.length; _i++) {
                         doc = docs_1[_i];
-                        exp.push({ name: doc.name, checked: false });
+                        if (doc.name === 'CAH Base Set') {
+                            exp.unshift({ name: doc.name, checked: true });
+                        }
+                        else {
+                            exp.push({ name: doc.name, checked: false });
+                        }
                     }
                     callback(exp);
-                    return [4 /*yield*/, client.close()];
-                case 3:
-                    _a.sent();
-                    return [3 /*break*/, 6];
-                case 4: return [4 /*yield*/, client.close()];
-                case 5:
-                    _a.sent();
-                    return [7 /*endfinally*/];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 3: return [7 /*endfinally*/];
+                case 4: return [2 /*return*/];
             }
         });
     });

@@ -1,5 +1,6 @@
 import express from 'express';
 import Game from './game'
+import { ExpansionSets } from './types';
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
@@ -45,15 +46,20 @@ async function getExpansions(callback: Function) {
         const database = client.db('letsplaycards');
         const expansions = database.collection('expansions');
         const docs = await expansions.find().toArray()
-        let exp: {name: string, checked: boolean}[] = []
+        let exp: ExpansionSets = []
 
         for (const doc of docs) {
-            exp.push({name: doc.name, checked: false})
+            if (doc.name === 'CAH Base Set') {
+                exp.unshift({name: doc.name, checked: true})
+            } else {
+                exp.push({name: doc.name, checked: false})
+            }
         }
         
         callback(exp)
+        //await client.close()
     } finally {
-        await client.close()
+        
     }
 }
 
