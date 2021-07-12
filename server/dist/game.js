@@ -79,7 +79,7 @@ var Game = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _c.trys.push([0, , 3, 5]);
+                        _c.trys.push([0, , 3, 4]);
                         return [4 /*yield*/, client.connect()];
                     case 1:
                         _c.sent();
@@ -96,12 +96,9 @@ var Game = /** @class */ (function () {
                         }
                         this.shuffleArray(this.blackCardDrawPile);
                         this.shuffleArray(this.whiteCardDrawPile);
-                        return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, client.close()];
-                    case 4:
-                        _c.sent();
-                        return [7 /*endfinally*/];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 3: return [7 /*endfinally*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

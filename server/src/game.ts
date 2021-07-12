@@ -62,8 +62,8 @@ class Game {
         try {
             await client.connect();
         
-            const database = client.db('letsplaycards');
-            const expansions = database.collection('expansions');
+            const database = client.db('letsplaycards')
+            const expansions = database.collection('expansions')
         
             const query = {name: {$in: this.expansions}}
 
@@ -77,7 +77,7 @@ class Game {
             this.shuffleArray(this.blackCardDrawPile)
             this.shuffleArray(this.whiteCardDrawPile)
         } finally {
-            await client.close()
+         //   await client.close()
         }
     }
 

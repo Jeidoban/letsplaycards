@@ -92,9 +92,11 @@ function StartPage() {
     </div>
   )
 
-  function createGameClicked() {
+  function createGameClicked(e: any) {
+    e.preventDefault()
     setGameCreated(true)
     setGameID(Math.random().toString(36).substr(2, 9))
+    socket.emit('createGame', gameID, playerName, expansions, (e: any) => console.log(e))
   }
 
   function checkExpansions(event: any, index: any) {
@@ -124,7 +126,7 @@ function StartPage() {
         <div>
           <label htmlFor="password">Password</label>
           <input type="password" />
-          <button className="creategame" type="submit">Create Game</button>
+          <button className="creategame" onClick={createGameClicked}>Create Game</button>
         </div>
       )
     }
