@@ -1,21 +1,15 @@
 import express from 'express';
 import Game from './game'
+import { ExpansionSets } from './types';
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io';
 const io = new Server(server);
-import { MongoClient } from 'mongodb';
+import { client } from './config'
 
-const uri = "mongodb+srv://jade424433:fiqva8nHf4ePy4WN@cluster0.bhstq.mongodb.net/letsplaycards?retryWrites=true&w=majority";
-
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-let games: {[key: string]: Game}
+let games: {[key: string]: Game} = {}
 
 app.get('/', (req, res) => {
     res.send('Some stuff!');
@@ -41,20 +35,29 @@ server.listen(3001, () => {
 async function getExpansions(callback: Function) {
     try {
         await client.connect();
-    
+        
         const database = client.db('letsplaycards');
         const expansions = database.collection('expansions');
-
         const docs = await expansions.find().toArray()
-        
-        callback(docs)
+        let exp: ExpansionSets = []
 
+        for (const doc of docs) {
+            if (doc.name === 'CAH Base Set') {
+                exp.unshift({name: doc.name, checked: true})
+            } else {
+                exp.push({name: doc.name, checked: false})
+            }
+        }
+        
+        callback(exp)
+        //await client.close()
     } finally {
-        await client.close()
+        
     }
 }
 
 function createGame(gameID: string, ownerName: string, expansions: string[], callback: Function) {
     games[gameID] = new Game(gameID, ownerName, expansions)
+    //games[gameID].getCards()
     callback('ok')
 }

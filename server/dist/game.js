@@ -40,13 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var player_1 = __importDefault(require("./player"));
-var mongodb_1 = require("mongodb");
-// Replace the uri string with your MongoDB deployment's connection string.
-var uri = "mongodb+srv://jade424433:fiqva8nHf4ePy4WN@cluster0.bhstq.mongodb.net/letsplaycards?retryWrites=true&w=majority";
-var client = new mongodb_1.MongoClient(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+var config_1 = require("./config");
 var Game = /** @class */ (function () {
     function Game(gameID, gameOwner, expansions, password) {
         this.highestScore = 0;
@@ -58,8 +52,8 @@ var Game = /** @class */ (function () {
         this.gameID = gameID;
         this.password = password;
         this.expansions = expansions;
-        //this.getCards()
         this.addPlayer(gameOwner, true);
+        this.getCards();
     }
     Game.prototype.updateScore = function () {
     };
@@ -80,11 +74,11 @@ var Game = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _c.trys.push([0, , 3, 5]);
-                        return [4 /*yield*/, client.connect()];
+                        _c.trys.push([0, , 3, 4]);
+                        return [4 /*yield*/, config_1.client.connect()];
                     case 1:
                         _c.sent();
-                        database = client.db('letsplaycards');
+                        database = config_1.client.db('letsplaycards');
                         expansions = database.collection('expansions');
                         query = { name: { $in: this.expansions } };
                         return [4 /*yield*/, expansions.find(query).toArray()];
@@ -97,13 +91,9 @@ var Game = /** @class */ (function () {
                         }
                         this.shuffleArray(this.blackCardDrawPile);
                         this.shuffleArray(this.whiteCardDrawPile);
-                        console.log('hello');
-                        return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, client.close()];
-                    case 4:
-                        _c.sent();
-                        return [7 /*endfinally*/];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 3: return [7 /*endfinally*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

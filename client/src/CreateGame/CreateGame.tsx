@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import './StartGame.css'
+import './CreateGame.css'
 import io from 'socket.io-client'
 import arrow from '../images/Polygon1.svg'
 import {
@@ -11,39 +11,19 @@ import {
 } from "react-router-dom";
 
 function StartPage() {
-  const socket = io('http://127.0.0.1:3001')
+  const socket = io('http://localhost:3001')
   const [gameCreated, setGameCreated] = useState(false)
   const [playerName, setPlayerName] = useState('')
   const [gameID, setGameID] = useState('')
   const [expansionClicked, setExpasionClicked] = useState(false)
-  const [expansions, setExpansions] = useState<Expansion>([])
+  const [expansions, setExpansions] = useState<ExpansionSets>([])
 
-  type Expansion = { name: string, checked: boolean }[]  
+  type ExpansionSets = { name: string, checked: boolean }[]  
 
-  // async function getExpansions(): Expansion {
-  //   socket.emit('getExpansions', (expansions: Expansion) => {
-      
-  //   })
-  // }
-
-  // const expansions = [
-  //   {
-  //     name: 'hello',
-  //     checked: false
-  //   },
-  //   {
-  //     name: 'wow',
-  //     checked: false
-  //   },
-  //   {
-  //     name: 'cool',
-  //     checked: false
-  //   }
-  // ]
-
-  
   useEffect(() => {
-    // socket.emit('getExpansions')
+    socket.emit('getExpansions', (expansionSets: ExpansionSets) => {
+      setExpansions(expansionSets)
+    })
   }, [])
 
   // return (
@@ -96,8 +76,54 @@ function StartPage() {
       </header>
       <section className="card">
         <div className="content">
-          <h1>Game Options</h1>
-          <form action="#" method="POST">
+          {!gameCreated ? createGame() : startGame()}
+        </div>
+      </section>
+    </div>
+  )
+
+  function startGame() {
+    return (
+      <>
+          <h1>Invite Your Friends</h1>
+            <label htmlFor="invitelink">Share this link</label>
+            <input type="text" value="letsplaycards.xyz/?johnsroom23532352" disabled></input>
+            <ul className="userlist">
+                <li>
+                    Username1
+                </li>
+                <li>
+                    Username2
+                </li>
+                <li>
+                    Username3
+                </li>
+                <li>
+                    Username4
+                </li>
+                <li>
+                    Username5
+                </li>
+                <li>
+                    Username6
+                </li>
+                <li>
+                    Username7
+                </li>
+                <li>
+                    Username8
+                </li>
+            </ul>
+            <button className="startgame" type="submit">Start Game</button>
+      </>
+    )
+  }
+
+  function createGame() {
+    return (
+      <>
+        <h1>Game Options</h1>
+          <form action="#">
             <label htmlFor="username">Name</label>
             <input type="text" id="username" onChange={(e) => setPlayerName(e.target.value)} required />
             <label htmlFor="cards">Expansions</label>
@@ -107,22 +133,31 @@ function StartPage() {
             }}>Select Cards<img className="arrow" src={arrow} /></button>
             {expansionList()}
           </form>
-        </div>
-      </section>
-    </div>
-  )
-
-  function createGameClicked() {
-    setGameCreated(true)
-    setGameID(Math.random().toString(36).substr(2, 9))
+      </>
+    )
   }
 
-  function checkExpansions(event: any, index: any) {
+  function createGameClicked(e: any) {
+    e.preventDefault()
+    setGameCreated(true)
+    setGameID(Math.random().toString(36).substr(2, 9))
+    socket.emit('createGame', gameID, playerName, stripExpansions(), (e: any) => console.log(e))
+    setGameCreated(true)
+  }
+
+  function stripExpansions() {
+    let expasionsStrings: string[] = []
+    for (const expObject of expansions) {
+      if (expObject.checked) expasionsStrings.push(expObject.name)
+    } 
+    return expasionsStrings
+  }
+
+  function checkExpansions(event: any, index: number) {
     setExpansions(prev => {
       prev[index].checked = event.target.checked
       return prev
     })
-    //expansions[index].checked = !expansions[index].checked 
     console.log(expansions)
   }
 
@@ -133,7 +168,7 @@ function StartPage() {
           {expansions.map((item, index) => {
             return (
               <li>
-                  <input id="selectall" key={item.name} name={item.name} defaultChecked={item.checked} onChange={(e) => checkExpansions(e, index)} type="checkbox" />
+                  <input id="selectall" key={index} name={item.name} defaultChecked={item.checked} onChange={(e) => checkExpansions(e, index)} type="checkbox" />
                   <label key={item.name} htmlFor={item.name}>{item.name}</label>
               </li>
             )
@@ -145,7 +180,7 @@ function StartPage() {
         <div>
           <label htmlFor="password">Password</label>
           <input type="password" />
-          <button className="creategame" type="submit">Create Game</button>
+          <button className="creategame" onClick={createGameClicked}>Create Game</button>
         </div>
       )
     }

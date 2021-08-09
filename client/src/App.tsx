@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './App.css';
-import StartGame from './StartGame/StartGame'
+import CreateGame from './CreateGame/CreateGame'
 import io from 'socket.io-client'
 import {
   BrowserRouter as Router,
@@ -15,13 +15,14 @@ function App() {
     // socket.on('hello', (arg1, arg2, arg3) => {
     //   alert(arg1 + arg2 + arg3)
     // })
+    fetch('http://localhost:3001')
   })
 
   return (
     <Router>
       <Switch>
           <Route exact path="/">
-            <StartGame /> 
+            <CreateGame /> 
           </Route>
           <Route path="/play">
             <Wow />

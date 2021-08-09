@@ -1,0 +1,1 @@
+export type ExpansionSets = {name: string, checked: boolean}[]

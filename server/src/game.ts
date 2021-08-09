@@ -1,12 +1,5 @@
 import Player from './player'
-import { MongoClient } from 'mongodb';
-
-const uri = "mongodb+srv://jade424433:fiqva8nHf4ePy4WN@cluster0.bhstq.mongodb.net/letsplaycards?retryWrites=true&w=majority";
-
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+import { client } from './config'
 
 class Game {
     highestScore = 0
@@ -23,12 +16,12 @@ class Game {
         this.gameID = gameID
         this.password = password
         this.expansions = expansions
-        this.getCards()
         this.addPlayer(gameOwner, true)
+        this.getCards()
     }
 
     updateScore() {
-
+    
     }
 
     async dealCards() {
@@ -58,12 +51,12 @@ class Game {
         // reset to 0 everytime a server action is taken
     }
 
-    async getCards() {
+    public async getCards() {
         try {
             await client.connect();
         
-            const database = client.db('letsplaycards');
-            const expansions = database.collection('expansions');
+            const database = client.db('letsplaycards')
+            const expansions = database.collection('expansions')
         
             const query = {name: {$in: this.expansions}}
 
@@ -77,7 +70,7 @@ class Game {
             this.shuffleArray(this.blackCardDrawPile)
             this.shuffleArray(this.whiteCardDrawPile)
         } finally {
-            await client.close()
+         //   await client.close()
         }
     }
 
